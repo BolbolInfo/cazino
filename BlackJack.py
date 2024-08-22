@@ -21,80 +21,85 @@ class Player():
 def start(players, cards, values):
     print("\n--- Welcome to Blackjack! ---\n")
     
-    # Betting phase
-    for player in players:
-        print(f"\n{player.name}'s turn to place a bet:")
-        print("=================================")
-        player.placeBet()
-        print(f"{player.name} has placed a bet of {player.current_bet}.")
 
-    # Game phase
-    for player in players:
-        print(f"\n{player.name}'s turn:")
-        print("=================================")
-        deck = cards.copy()
-        random.shuffle(deck)
-        player_hand = []
-        dealer_hand = []
 
-        # Deal initial hands
-        for _ in range(2):
-            player_hand.append(deck.pop())
-            dealer_hand.append(deck.pop())
 
-        print("\nYour hand:", player_hand)
-        print("Total:", sum_hand(player_hand))
-        print("Dealer's hand:", [dealer_hand[0], "X"])
+    while True:
+        # Betting phase
+        for player in players:
+            print(f"\n{player.name}'s turn to place a bet:")
+            print("=================================")
+            player.placeBet()
+            print(f"{player.name} has placed a bet of {player.current_bet}.")
 
-        # Player's turn
-        while True:
-            choice = input("Would you like to [H]it or [S]tand? ").upper()
-            if choice == 'H':
+        # Game phase
+        for player in players:
+            print(f"\n{player.name}'s turn:")
+            print("=================================")
+            deck = cards.copy()
+            random.shuffle(deck)
+            player_hand = []
+            dealer_hand = []
+
+            # Deal initial hands
+            for _ in range(2):
                 player_hand.append(deck.pop())
-                print("Your hand:", player_hand)
-                print("Total:", sum_hand(player_hand))
-                if sum_hand(player_hand) > 21:
-                    print("Busted! You lose.")
-                    player.budget -= player.current_bet
-                    break
-            elif choice == 'S':
-                break
-            else:
-                print("Invalid choice. Please enter 'H' or 'S'.")
-
-        if sum_hand(player_hand) <= 21:
-            # Dealer's turn
-            while sum_hand(dealer_hand) < 17:
                 dealer_hand.append(deck.pop())
 
             print("\nYour hand:", player_hand)
-            print("Your total:", sum_hand(player_hand))
-            print("\nDealer's hand:", dealer_hand)
-            print("Dealer's total:", sum_hand(dealer_hand))
+            print("Total:", sum_hand(player_hand))
+            print("Dealer's hand:", [dealer_hand[0], "X"])
 
-            # Determine winner
-            player_total = sum_hand(player_hand)
-            dealer_total = sum_hand(dealer_hand)
-            if player_total == 21 and len(player_hand) == 2:  # Blackjack
-                print("\nBlackjack! You win 150% of your bet!")
-                player.budget += player.current_bet * 1.5
-            elif player_total > 21:
-                print("\nBusted! You lose.")
-                player.budget -= player.current_bet
-            elif dealer_total > 21 or player_total > dealer_total:
-                print("\nCongratulations! You win!")
-                player.budget += player.current_bet
-            elif player_total < dealer_total:
-                print("\nDealer wins.")
-                player.budget -= player.current_bet
-            else:
-                print("\nIt's a tie!")
+            # Player's turn
+            while True:
+                choice = input("Would you like to [H]it or [S]tand? ").upper()
+                if choice == 'H':
+                    player_hand.append(deck.pop())
+                    print("Your hand:", player_hand)
+                    print("Total:", sum_hand(player_hand))
+                    if sum_hand(player_hand) > 21:
+                        print("Busted! You lose.")
+                        player.budget -= player.current_bet
+                        break
+                elif choice == 'S':
+                    break
+                else:
+                    print("Invalid choice. Please enter 'H' or 'S'.")
 
-            print(f"\nCurrent budget: {player.budget} $")
+            if sum_hand(player_hand) <= 21:
+                # Dealer's turn
+                while sum_hand(dealer_hand) < 17:
+                    dealer_hand.append(deck.pop())
 
-    play_again = input("\nWould you like to play again? [Y/N] ").upper()
-    if play_again != 'Y':
-        print("\nThanks for playing!")
+                print("\nYour hand:", player_hand)
+                print("Your total:", sum_hand(player_hand))
+                print("\nDealer's hand:", dealer_hand)
+                print("Dealer's total:", sum_hand(dealer_hand))
+
+                # Determine winner
+                player_total = sum_hand(player_hand)
+                dealer_total = sum_hand(dealer_hand)
+                if player_total == 21 and len(player_hand) == 2:  # Blackjack
+                    print("\nBlackjack! You win 150% of your bet!")
+                    player.budget += player.current_bet * 1.5
+                elif player_total > 21:
+                    print("\nBusted! You lose.")
+                    player.budget -= player.current_bet
+                elif dealer_total > 21 or player_total > dealer_total:
+                    print("\nCongratulations! You win!")
+                    player.budget += player.current_bet
+                elif player_total < dealer_total:
+                    print("\nDealer wins.")
+                    player.budget -= player.current_bet
+                else:
+                    print("\nIt's a tie!")
+
+                print(f"\nCurrent budget: {player.budget} $")
+
+        play_again = input("\nWould you like to play again? [Y/N] ").upper()
+        if play_again != 'Y':
+            print("\nThanks for playing!")
+            break
 
 def sum_hand(hand):
     total = 0
